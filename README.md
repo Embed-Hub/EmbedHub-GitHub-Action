@@ -33,7 +33,7 @@ Add this action to your GitHub workflow after your build step:
 
 ```yaml
 - name: Upload to EmbedHub
-  uses: embedhub/embedhub-action@v1
+  uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
     api-key: ${{ secrets.EMBEDHUB_API_KEY }}
     organization: ${{ secrets.EMBEDHUB_ORG }}
@@ -47,7 +47,7 @@ Add this action to your GitHub workflow after your build step:
 
 ```yaml
 - name: Upload firmware binary
-  uses: embedhub/embedhub-action@v1
+  uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
     api-key: ${{ secrets.EMBEDHUB_API_KEY }}
     organization: mycompany
@@ -59,7 +59,7 @@ Add this action to your GitHub workflow after your build step:
 
 ```yaml
 - name: Upload all build artifacts
-  uses: embedhub/embedhub-action@v1
+  uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
     api-key: ${{ secrets.EMBEDHUB_API_KEY }}
     organization: mycompany
@@ -71,7 +71,7 @@ Add this action to your GitHub workflow after your build step:
 
 ```yaml
 - name: Upload release files
-  uses: embedhub/embedhub-action@v1
+  uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
     api-key: ${{ secrets.EMBEDHUB_API_KEY }}
     organization: mycompany
@@ -84,7 +84,7 @@ Add this action to your GitHub workflow after your build step:
 
 ```yaml
 - name: Upload from build directory
-  uses: embedhub/embedhub-action@v1
+  uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
     api-key: ${{ secrets.EMBEDHUB_API_KEY }}
     organization: mycompany
