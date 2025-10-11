@@ -1,0 +1,39 @@
+name: 'EmbedHub Upload'
+description: 'Upload build artifacts (binaries, hex files, map files) to EmbedHub projects'
+author: 'EmbedHub'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+
+inputs:
+  api-key:
+    description: 'EmbedHub API key (use secrets.EMBEDHUB_API_KEY)'
+    required: true
+  organization:
+    description: 'Organization slug (e.g., "mycompany" or "username")'
+    required: true
+  project:
+    description: 'Project slug (e.g., "my-project")'
+    required: true
+  files:
+    description: 'Files to upload (supports glob patterns like "*.bin", "*.hex", "build/*.map")'
+    required: true
+  path:
+    description: 'Target path in the project (e.g., "releases/v1.0.0/" or "firmware/"). Leave empty for default paths based on file type.'
+    required: false
+    default: ''
+  working-directory:
+    description: 'Working directory to run the action from'
+    required: false
+    default: '.'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.api-key }}
+    - ${{ inputs.organization }}
+    - ${{ inputs.project }}
+    - ${{ inputs.files }}
+    - ${{ inputs.path }}
+    - ${{ inputs.working-directory }}
