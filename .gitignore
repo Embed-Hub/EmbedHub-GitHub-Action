@@ -16,3 +16,6 @@ test-output/
 # Build artifacts
 build/
 dist/
+
+# Keep the pre-built binary
+!embedhub-linux-amd64
