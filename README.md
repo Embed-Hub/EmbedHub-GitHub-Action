@@ -110,9 +110,11 @@ When `path` is not specified, files are uploaded to these default locations base
 
 | File Type | Extensions | Default Path |
 |-----------|-----------|--------------|
-| Release Files | `.bin`, `.hex`, `.elf`, `.map` | `releases/` |
-| Documents | `.pdf`, `.jpg`, `.png`, `.svg` | `documents/` |
-| Other Files | All others | Root directory |
+| Release files | `.bin`, `.elf`, `.map` | `releases/` |
+| Documents | `.pdf` | `documents/` |
+| Images & videos | `.jpg`, `.jpeg`, `.png`, `.svg`, `.webp`, `.gif`, `.mp4`, `.mov`, `.webm` | `photos/` |
+| Captures | `.sr`, `.vcd`, `.log` | `captures/` |
+| Other files (including `.hex`) | All others | Root directory |
 
 ## License
 
