@@ -8,13 +8,13 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Parse inputs
-API_KEY="$1"
-ORGANIZATION="$2"
-PROJECT="$3"
-FILES="$4"
-TARGET_PATH="$5"
-WORKING_DIR="$6"
+# Parse inputs. The token comes in as EMBEDHUB_TOKEN (see action.yml), which
+# the CLI reads by itself.
+ORGANIZATION="$1"
+PROJECT="$2"
+FILES="$3"
+TARGET_PATH="$4"
+WORKING_DIR="$5"
 
 # Function to print colored output
 print_info() {
@@ -34,10 +34,15 @@ print_warning() {
 }
 
 # Validate required inputs
-if [ -z "$API_KEY" ]; then
-    print_error "API key is required. Please set the 'api-key' input."
+if [ -z "${EMBEDHUB_TOKEN:-}" ]; then
+    print_error "A project token is required. Set the 'token' input to \${{ secrets.EMBEDHUB_TOKEN }}."
     exit 1
 fi
+case "$EMBEDHUB_TOKEN" in
+    ehp_*) ;;
+    *) print_error "'token' is not an EmbedHub project token (it starts with ehp_). Make one in the project: Settings → Tokens."
+       exit 1 ;;
+esac
 
 if [ -z "$ORGANIZATION" ]; then
     print_error "Organization is required. Please set the 'organization' input."
@@ -62,10 +67,6 @@ if [ -n "$WORKING_DIR" ] && [ "$WORKING_DIR" != "." ]; then
         exit 1
     }
 fi
-
-# Configure the EmbedHub CLI with API key
-print_info "Configuring EmbedHub CLI..."
-embedhub config set api-key "$API_KEY" > /dev/null 2>&1
 
 # Construct the project path
 PROJECT_PATH="$ORGANIZATION/$PROJECT"

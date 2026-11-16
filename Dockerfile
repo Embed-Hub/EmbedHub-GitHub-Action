@@ -1,17 +1,16 @@
 FROM debian:bookworm-slim
 
-# Install ca-certificates for HTTPS and bash
+# The EmbedHub CLI, pinned. Bump on each CLI release.
+ARG EMBEDHUB_CLI_VERSION=0.18
+
 RUN apt-get update && \
-    apt-get install -y ca-certificates bash && \
+    apt-get install -y --no-install-recommends ca-certificates bash curl && \
+    curl -fsSL "https://cdn.embedhub.com/cli/${EMBEDHUB_CLI_VERSION}/embedhub-linux-amd64" -o /usr/local/bin/embedhub && \
+    chmod +x /usr/local/bin/embedhub && \
+    apt-get purge -y curl && apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the pre-built EmbedHub CLI binary (Linux x86_64)
-COPY embedhub-linux-amd64 /usr/local/bin/embedhub
-RUN chmod +x /usr/local/bin/embedhub
-
-# Copy the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

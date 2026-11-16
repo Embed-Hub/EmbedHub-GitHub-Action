@@ -6,8 +6,8 @@ branding:
   color: 'blue'
 
 inputs:
-  api-key:
-    description: 'EmbedHub API key (use secrets.EMBEDHUB_API_KEY)'
+  token:
+    description: 'EmbedHub project token (use secrets.EMBEDHUB_TOKEN). Make one in the project: Settings → Tokens.'
     required: true
   organization:
     description: 'Organization slug (e.g., "mycompany" or "username")'
@@ -30,8 +30,10 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  # The token travels in the environment, never as an argument.
+  env:
+    EMBEDHUB_TOKEN: ${{ inputs.token }}
   args:
-    - ${{ inputs.api-key }}
     - ${{ inputs.organization }}
     - ${{ inputs.project }}
     - ${{ inputs.files }}

@@ -9,23 +9,20 @@ Automatically upload your build artifacts (binaries, hex files, map files, etc.)
 
 ## Quick Start
 
-### 1. Create an EmbedHub API Key
+### 1. Make a project token
 
-1. Log in to your EmbedHub account
-2. Go to your settings
-3. Navigate to the "API Keys" tab
-4. Create a new API key and copy it
+1. On [embedhub.com](https://embedhub.com), open your project's **Settings → Tokens**.
+2. Click **New**, give it a name (e.g. "github ci"), and pick the folders the
+   workflow needs, for example `releases/` with write.
+3. Copy the token. It is shown once.
 
-### 2. Add GitHub Secrets
+A token works on that one project and can only do what you can do there.
 
-Add these secrets to your GitHub repository:
+### 2. Add it as a GitHub secret
+
 - Go to **Settings → Secrets and variables → Actions**
 - Click **New repository secret**
-
-Required secrets:
-- `EMBEDHUB_API_KEY` - Your EmbedHub API key
-- `EMBEDHUB_ORG` - Your organization slug (e.g., `mycompany` or your username)
-- `EMBEDHUB_PROJECT` - Your project slug (e.g., `my-firmware`)
+- Name: `EMBEDHUB_TOKEN`, value: the token
 
 ### 3. Use in Your Workflow
 
@@ -35,9 +32,9 @@ Add this action to your GitHub workflow after your build step:
 - name: Upload to EmbedHub
   uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
-    api-key: ${{ secrets.EMBEDHUB_API_KEY }}
-    organization: ${{ secrets.EMBEDHUB_ORG }}
-    project: ${{ secrets.EMBEDHUB_PROJECT }}
+    token: ${{ secrets.EMBEDHUB_TOKEN }}
+    organization: mycompany
+    project: my-firmware
     files: 'build/*.bin'
 ```
 
@@ -49,7 +46,7 @@ Add this action to your GitHub workflow after your build step:
 - name: Upload firmware binary
   uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
-    api-key: ${{ secrets.EMBEDHUB_API_KEY }}
+    token: ${{ secrets.EMBEDHUB_TOKEN }}
     organization: mycompany
     project: iot-device
     files: 'firmware.bin'
@@ -61,7 +58,7 @@ Add this action to your GitHub workflow after your build step:
 - name: Upload all build artifacts
   uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
-    api-key: ${{ secrets.EMBEDHUB_API_KEY }}
+    token: ${{ secrets.EMBEDHUB_TOKEN }}
     organization: mycompany
     project: embedded-app
     files: 'build/*.{bin,hex,map,elf}'
@@ -73,7 +70,7 @@ Add this action to your GitHub workflow after your build step:
 - name: Upload release files
   uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
-    api-key: ${{ secrets.EMBEDHUB_API_KEY }}
+    token: ${{ secrets.EMBEDHUB_TOKEN }}
     organization: mycompany
     project: sensor-firmware
     files: 'dist/*.bin'
@@ -86,7 +83,7 @@ Add this action to your GitHub workflow after your build step:
 - name: Upload from build directory
   uses: Embed-Hub/EmbedHub-GitHub-Action@master
   with:
-    api-key: ${{ secrets.EMBEDHUB_API_KEY }}
+    token: ${{ secrets.EMBEDHUB_TOKEN }}
     organization: mycompany
     project: motor-controller
     files: '*.hex'
@@ -97,7 +94,7 @@ Add this action to your GitHub workflow after your build step:
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| `api-key` | **Yes** | EmbedHub API key (use `${{ secrets.EMBEDHUB_API_KEY }}`) | - |
+| `token` | **Yes** | EmbedHub project token (use `${{ secrets.EMBEDHUB_TOKEN }}`) | - |
 | `organization` | **Yes** | Organization slug (e.g., `mycompany` or username) | - |
 | `project` | **Yes** | Project slug (e.g., `my-firmware`) | - |
 | `files` | **Yes** | Files to upload (supports glob: `*.bin`, `build/*.{hex,map}`) | - |
@@ -115,6 +112,17 @@ When `path` is not specified, files are uploaded to these default locations base
 | Images & videos | `.jpg`, `.jpeg`, `.png`, `.svg`, `.webp`, `.gif`, `.mp4`, `.mov`, `.webm` | `photos/` |
 | Captures | `.sr`, `.vcd`, `.log` | `captures/` |
 | Other files (including `.hex`) | All others | Root directory |
+
+## Development
+
+The action is a small Debian image with the EmbedHub CLI (pinned by
+`EMBEDHUB_CLI_VERSION` in the `Dockerfile`; bump it on each CLI release) and
+`entrypoint.sh`.
+
+```bash
+test/entrypoint_test.sh   # entrypoint against a stub CLI: inputs, token handling, outputs
+test/image_test.sh        # builds the image (podman or docker), checks the pinned CLI
+```
 
 ## License
 
